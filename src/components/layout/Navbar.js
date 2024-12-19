@@ -10,11 +10,12 @@ import {
   Container,
   Avatar,
   Button,
-  Tooltip,
   MenuItem,
   ListItemIcon,
   ListItemText,
   Divider,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -49,7 +50,8 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const pages = currentUser ? [
     { title: 'Dashboard', path: '/dashboard' },
@@ -124,73 +126,61 @@ function Navbar() {
     <AppBar position="sticky" sx={{ background: 'rgba(22, 23, 28, 0.8)', backdropFilter: 'blur(10px)' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Logo - Desktop */}
-          <Box
-            component="img"
-            src="/logo.png"
-            alt="Finprime Logo"
-            onClick={handleLogoClick}
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              height: '40px',
-              mr: 2,
-              cursor: 'pointer'
-            }}
-          />
-
           {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.title}
-                  onClick={() => {
-                    handleCloseNavMenu();
-                    navigate(page.path);
-                  }}
-                >
-                  <Typography textAlign="center">{page.title}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {isMobile && (
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                sx={{ color: 'white' }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem
+                    key={page.title}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      navigate(page.path);
+                    }}
+                  >
+                    <Typography textAlign="center">{page.title}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
 
-          {/* Logo - Mobile */}
+          {/* Logo */}
           <Box
             component="img"
             src="/logo.png"
             alt="Finprime Logo"
             onClick={handleLogoClick}
             sx={{
-              display: { xs: 'flex', md: 'none' },
-              height: '32px',
-              mr: 1,
+              height: isMobile ? '32px' : '40px',
+              mr: 2,
               cursor: 'pointer'
             }}
           />
@@ -216,14 +206,11 @@ function Navbar() {
             ))}
           </Box>
 
-          {/* Right side menu */}
+          {/* User Menu */}
           <Box sx={{ flexGrow: 0 }}>
             {currentUser ? (
               <>
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ p: 0 }}
-                >
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt={currentUser.email} src="/static/images/avatar/2.jpg" />
                 </IconButton>
                 <Menu
@@ -265,6 +252,7 @@ function Navbar() {
                 <Button
                   variant="outlined"
                   onClick={() => navigate('/login')}
+                  sx={{ color: 'white', borderColor: 'white' }}
                 >
                   Login
                 </Button>
