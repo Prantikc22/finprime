@@ -16,7 +16,10 @@ import {
   Avatar,
   Rating,
   Link,
-  IconButton
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider
 } from '@mui/material';
 import {
   TrendingUp,
@@ -43,7 +46,8 @@ import {
   Construction,
   PeopleAlt,
   WorkspacePremium,
-  ArrowForward
+  ArrowForward,
+  Menu as MenuIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -207,10 +211,21 @@ const financialServices = [
   }
 ];
 
+const pages = ['Tools', 'Financial Solutions', 'FinPrime TradeRoom'];
+
 const LandingPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -278,11 +293,20 @@ const LandingPage = () => {
       >
         <Container maxWidth="xl">
           <Stack direction="row" alignItems="center" justifyContent="space-between">
+            {/* Logo */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <img src="/logo.png" alt="FinPrime Logo" style={{ height: 40 }} />
             </Box>
             
-            <Stack direction="row" spacing={4} alignItems="center">
+            {/* Desktop Navigation */}
+            <Stack 
+              direction="row" 
+              spacing={4} 
+              alignItems="center" 
+              sx={{ 
+                display: { xs: 'none', md: 'flex' } 
+              }}
+            >
               <Link 
                 href="#tools" 
                 sx={{ 
@@ -359,6 +383,55 @@ const LandingPage = () => {
                 Register
               </Button>
             </Stack>
+
+            {/* Mobile Navigation */}
+            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="menu"
+                onClick={handleOpenNavMenu}
+                sx={{ color: 'text.primary' }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorElNav}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                  '& .MuiPaper-root': {
+                    backgroundColor: 'background.paper',
+                  }
+                }}
+              >
+                <MenuItem onClick={() => { handleCloseNavMenu(); navigate('#tools'); }}>
+                  <Typography textAlign="center">Tools</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => { handleCloseNavMenu(); navigate('#financial-solutions'); }}>
+                  <Typography textAlign="center">Financial Solutions</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => { handleCloseNavMenu(); navigate('/premium'); }}>
+                  <Typography textAlign="center">FinPrime TradeRoom</Typography>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={() => { handleCloseNavMenu(); navigate('/login'); }}>
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => { handleCloseNavMenu(); navigate('/register'); }}
+                  sx={{
+                    background: 'linear-gradient(45deg, #FFD700 30%, #FFA500 90%)',
+                    color: 'black',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #FFD700 30%, #FFA500 90%)',
+                    }
+                  }}
+                >
+                  <Typography textAlign="center">Register</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
           </Stack>
         </Container>
       </Box>
@@ -623,12 +696,8 @@ const LandingPage = () => {
                       animation: 'shine 2s infinite',
                     },
                     '@keyframes shine': {
-                      '0%': {
-                        left: '-100%',
-                      },
-                      '100%': {
-                        left: '100%',
-                      },
+                      '0%': { left: '-100%' },
+                      '100%': { left: '100%' }
                     },
                     '&:hover': {
                       background: 'linear-gradient(45deg, #FFA500 30%, #FFD700 90%)',

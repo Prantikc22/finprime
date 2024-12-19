@@ -183,7 +183,7 @@ const Dashboard = () => {
               ...premiumCardStyle,
               cursor: 'pointer'
             }}
-            onClick={() => navigate('/dashboard/premium')}
+            onClick={() => navigate('/premium')}
           >
             <Box
               className="premium-glow"
@@ -271,7 +271,7 @@ const Dashboard = () => {
               >
                 <Typography
                   variant="button"
-                  onClick={() => navigate('/dashboard/premium')}
+                  onClick={() => navigate('/premium')}
                   sx={{
                     display: 'block',
                     color: '#000',
